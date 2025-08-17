@@ -1,10 +1,7 @@
-# In predictor.py
-
 import joblib
 import pandas as pd
 from datetime import datetime
 
-# --- This part remains the same ---
 model = joblib.load('co2_model_weather.joblib')
 
 def get_prediction_and_recommendation(live_data, temp, humidity, rain):
@@ -12,7 +9,7 @@ def get_prediction_and_recommendation(live_data, temp, humidity, rain):
     Takes live sensor and weather data to make a CO2 prediction and a DYNAMIC recommendation.
     """
     
-    # --- Data preparation part remains the same ---
+    # --- Data preparation ---
     live_df = pd.DataFrame([live_data])
     now = datetime.now()
     live_df['Hour_of_Day'] = now.hour
@@ -32,11 +29,11 @@ def get_prediction_and_recommendation(live_data, temp, humidity, rain):
     
     predicted_co2 = model.predict(live_df)[0]
     
-    # --- NEW: Smarter Recommendation Logic ---
+    # --- Smart Recommendation Logic ---
     recommendation = "Emissions are normal. Great job!"
     
     # Define a threshold for what we consider 'high' emissions
-    high_emission_threshold = 0.01 
+    high_emission_threshold = 0.05 
     
     if predicted_co2 > high_emission_threshold:
         # Identify which high-power appliance is currently on
