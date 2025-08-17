@@ -87,6 +87,8 @@ history_df = view_history()
 
 # --- 1. KPI (Key Performance Indicator) Section ---
 st.subheader("Key Metrics")
+if 'recommendation' in st.session_state:
+    st.info(f"**Recommendation:** {st.session_state.recommendation}")
 if not history_df.empty:
     col1, col2, col3 = st.columns(3)
     latest_co2 = history_df['predicted_co2'].iloc[-1]
@@ -101,8 +103,11 @@ if not history_df.empty:
 if st.sidebar.button('Calculate & Save Emissions'):
     co2, rec = get_prediction_and_recommendation(live_data, temp_c, humidity_p, rain_mm)
     add_to_history(co2, weather_data, live_data)
-    st.success(f"**Recommendation:** {rec}")
-    st.rerun() # Rerun the app to update the dashboard instantly
+
+    # THE FIX: Save the recommendation to the app's memory
+    st.session_state.recommendation = rec
+
+    st.rerun()
 
 st.markdown("---") # Visual separator
 
